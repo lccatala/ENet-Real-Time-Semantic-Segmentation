@@ -23,11 +23,12 @@ def test(FLAGS):
     # Assuming the dataset is camvid
     enet = ENet(FLAGS.num_classes)
     enet.load_state_dict(checkpoint['state_dict'])
+    enet.cuda()
 
     tmg_ = plt.imread(FLAGS.image_path)
     tmg_ = cv2.resize(tmg_, (h, w), cv2.INTER_NEAREST)
     tmg = torch.tensor(tmg_).unsqueeze(0).float()
-    tmg = tmg.transpose(2, 3).transpose(1, 2)
+    tmg = tmg.transpose(2, 3).transpose(1, 2).to(FLAGS.cuda)
 
     with torch.no_grad():
         out1 = enet(tmg.float()).squeeze(0)
